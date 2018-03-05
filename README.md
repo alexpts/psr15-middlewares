@@ -11,3 +11,10 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 ## Installation
 
 ```$ composer require alexpts/psr15-middlewares```
+
+
+### ResponseTime
+
+### ResponseMemory
+
+### ResponseEmit
