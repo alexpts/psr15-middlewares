@@ -4,12 +4,33 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Memory;
 use Zend\Diactoros\Response;
 
 class MemoryTest extends TestCase
 {
+    public function testInvoke(): void
+    {
+        /** @var MockObject|ResponseInterface $middleware */
+        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        /** @var MockObject|ServerRequestInterface $request */
+        $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        /** @var MockObject|RequestHandlerInterface $next */
+        $next = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+
+        /** @var MiddlewareInterface|Memory|MockObject $middleware */
+        $middleware = $this->getMockBuilder(Memory::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['process'])
+            ->getMock();
+        $middleware->expects(self::once())->method('process')->with($request, $next)->willReturn($response);
+
+        $actual = $middleware($request, $next);
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+    }
+
     /**
      * @throws ReflectionException
      */

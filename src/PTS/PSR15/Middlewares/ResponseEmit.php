@@ -19,6 +19,11 @@ class ResponseEmit implements MiddlewareInterface
         $this->emitter = $emitter;
     }
 
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
+    {
+        return $this->process($request, $next);
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $next) : ResponseInterface
     {
         /** @var ResponseInterface $response */

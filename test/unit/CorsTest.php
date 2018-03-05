@@ -5,11 +5,32 @@ use PHPUnit\Framework\TestCase;
 use Plugins\Middlewares\Cors;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response;
 
 class CorsTest extends TestCase
 {
+    public function testInvoke(): void
+    {
+        /** @var MockObject|ResponseInterface $middleware */
+        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        /** @var MockObject|ServerRequestInterface $request */
+        $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        /** @var MockObject|RequestHandlerInterface $next */
+        $next = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+
+        /** @var MiddlewareInterface|Cors|MockObject $middleware */
+        $middleware = $this->getMockBuilder(Cors::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['process'])
+            ->getMock();
+        $middleware->expects(self::once())->method('process')->with($request, $next)->willReturn($response);
+
+        $actual = $middleware($request, $next);
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+    }
+
     /**
      * @param array $hosts
      * @param string $header

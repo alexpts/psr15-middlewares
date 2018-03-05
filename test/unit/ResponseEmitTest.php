@@ -12,6 +12,26 @@ use Zend\Diactoros\Response\SapiEmitter;
 
 class ResponseEmitTest extends TestCase
 {
+    public function testInvoke(): void
+    {
+        /** @var MockObject|ResponseInterface $middleware */
+        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        /** @var MockObject|ServerRequestInterface $request */
+        $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        /** @var MockObject|RequestHandlerInterface $next */
+        $next = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+
+        /** @var MiddlewareInterface|ResponseEmit|MockObject $middleware */
+        $middleware = $this->getMockBuilder(ResponseEmit::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['process'])
+            ->getMock();
+        $middleware->expects(self::once())->method('process')->with($request, $next)->willReturn($response);
+
+        $actual = $middleware($request, $next);
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+    }
+
     /**
      * @throws Throwable
      */

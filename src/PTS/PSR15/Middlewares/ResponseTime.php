@@ -12,6 +12,11 @@ class ResponseTime implements MiddlewareInterface
 {
     protected const HEADER = 'X-Response-Time';
 
+    public function __invoke(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
+    {
+        return $this->process($request, $next);
+    }
+
     /**
      * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $next

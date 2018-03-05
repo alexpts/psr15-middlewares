@@ -4,6 +4,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\ResponseTime;
 use Zend\Diactoros\Response;
@@ -11,6 +12,26 @@ use Zend\Diactoros\ServerRequest;
 
 class ResponseTimeTest extends TestCase
 {
+    public function testInvoke(): void
+    {
+        /** @var MockObject|ResponseInterface $middleware */
+        $response = $this->getMockBuilder(ResponseInterface::class)->getMock();
+        /** @var MockObject|ServerRequestInterface $request */
+        $request = $this->getMockBuilder(ServerRequestInterface::class)->getMock();
+        /** @var MockObject|RequestHandlerInterface $next */
+        $next = $this->getMockBuilder(RequestHandlerInterface::class)->getMock();
+
+        /** @var MiddlewareInterface|ResponseTime|MockObject $middleware */
+        $middleware = $this->getMockBuilder(ResponseTime::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['process'])
+            ->getMock();
+        $middleware->expects(self::once())->method('process')->with($request, $next)->willReturn($response);
+
+        $actual = $middleware($request, $next);
+        self::assertInstanceOf(ResponseInterface::class, $actual);
+    }
+
     /**
      * @throws ReflectionException
      */
