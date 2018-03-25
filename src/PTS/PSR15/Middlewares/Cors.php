@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Plugins\Middlewares;
+namespace PTS\PSR15\Middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

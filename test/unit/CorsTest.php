@@ -2,11 +2,11 @@
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Plugins\Middlewares\Cors;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use PTS\PSR15\Middlewares\Cors;
 use Zend\Diactoros\Response;
 
 class CorsTest extends TestCase
