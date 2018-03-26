@@ -5,12 +5,13 @@ namespace PTS\PSR15\Middlewares;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * @docs https://www.w3.org/TR/cors/
  */
-class Cors
+class Cors implements MiddlewareInterface
 {
 	protected const ORIGIN = 'Access-Control-Allow-Origin';
 	protected const HEADERS = 'Access-Control-Allow-Headers';
