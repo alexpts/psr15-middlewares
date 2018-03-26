@@ -19,7 +19,7 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 
 ### ResponseEmit
 
-### CORS
+### CORS (deprecated => see StaticHeader)
 
 ### PoweredBy
 
@@ -28,3 +28,5 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 ### PhpInputToBody (need tests)
 
 ### Etag (need tests)
+
+### StaticHeader (need tests)
