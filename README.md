@@ -26,3 +26,5 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 ### isXHR
 
 ### PhpInputToBody (need tests)
+
+### Etag (need tests)
