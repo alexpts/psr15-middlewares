@@ -34,19 +34,25 @@ class Etag implements MiddlewareInterface
      */
     public function addEtag(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        if ($request->getMethod() === 'GET' && $response->getStatusCode() === 200) {
+        if ($this->canEtag($request, $response)) {
             $etag = 'W/"' . md5($response->getBody()->getContents()) . '"';
             $response = $response->withHeader('Etag', $etag);
 
-            if ($request->hasHeader('If-None-Match')) {
-                $clientEtag = $request->getHeader('If-None-Match');
+            $clientEtag = $request->getHeader('If-None-Match');
 
-                if ($clientEtag[0] === $etag) {
-                    $response = $response->withStatus(304);
-                }
+            if ($clientEtag[0] === $etag) {
+                $response = $response->withStatus(304);
             }
+
         }
 
         return $response;
+    }
+
+    protected function canEtag(ServerRequestInterface $request, ResponseInterface $response): bool
+    {
+        return $request->getMethod() === 'GET'
+            && $response->getStatusCode() === 200
+            && $request->hasHeader('If-None-Match');
     }
 }
