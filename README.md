@@ -6,6 +6,8 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alexpts/psr15-middlewares/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alexpts/psr15-middlewares/?branch=master)
 
 
+Collection of PSR-15 middlewares.
+
 Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR-15](https://www.php-fig.org/psr/psr-15/)
 
 ## Installation
@@ -31,4 +33,6 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 
 ### StaticHeader (need tests)
 
-### StaticHeaderDefault
+### StaticHeaderDefault (need tests)
+
+### JsonPayload (need tests)
