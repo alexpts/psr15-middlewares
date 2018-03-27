@@ -22,7 +22,9 @@ class PhpInputToBody implements MiddlewareInterface
     public function process(ServerRequestInterface $request,  RequestHandlerInterface $handler) : ResponseInterface
     {
         $body = $this->parseBody($request);
-        $request = $request->withParsedBody(array_merge($body, $request->getParsedBody()));
+        $parsedBody = $request->getParsedBody();
+
+        $request = $request->withParsedBody(array_merge($body, $parsedBody));
 
         return $handler->handle($request);
     }

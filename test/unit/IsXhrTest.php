@@ -37,6 +37,7 @@ class IsXhrTest extends TestCase
     }
 
     /**
+     * @param string $header
      * @param bool $expected
      *
      * @throws ReflectionException
