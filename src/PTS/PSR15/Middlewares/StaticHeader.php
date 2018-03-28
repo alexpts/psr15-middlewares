@@ -34,7 +34,7 @@ class StaticHeader implements MiddlewareInterface
 
     /**
      * @param ResponseInterface $response
-     * @param array $headers
+     * @param array $headers - header is array of values or string value
      *
      * @return ResponseInterface
      *
@@ -43,8 +43,7 @@ class StaticHeader implements MiddlewareInterface
     protected function withStaticHeaders(ResponseInterface $response, array $headers): ResponseInterface
     {
         foreach ($headers as $name => $header) {
-            $header = \is_array($header) ? \implode(', ', $header) : $header;
-            $response = $response->withHeader($name, $header);
+            $response = $response->withAddedHeader($name, $header);
         }
 
         return $response;

@@ -19,7 +19,6 @@ class StaticHeaderDefault extends StaticHeader
     {
         foreach ($headers as $name => $header) {
             if (!$response->hasHeader($name)) {
-                $header = \is_array($header) ? \implode(', ', $header) : $header;
                 $response = $response->withHeader($name, $header);
             }
         }

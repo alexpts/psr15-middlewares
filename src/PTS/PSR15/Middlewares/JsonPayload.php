@@ -13,7 +13,6 @@ class JsonPayload implements MiddlewareInterface
 {
     /** @var array */
     protected $ignoreHttpMethods = ['GET', 'HEAD'];
-
     /** @var array */
     private $allowContentTypes = ['application/json'];
 
@@ -23,7 +22,7 @@ class JsonPayload implements MiddlewareInterface
     protected $decodeOptions = JSON_ERROR_NONE;
 
     /**
-     * @param ServerRequestInterface  $request
+     * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $next
      *
      * @return ResponseInterface
