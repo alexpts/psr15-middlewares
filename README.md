@@ -31,8 +31,10 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 
 ### Etag
 
-### StaticHeader (need tests)
+### StaticHeader
 
-### StaticHeaderDefault (need tests)
+### StaticHeaderDefault
 
 ### JsonPayload (need tests)
+
+### RequestWithAttribute
