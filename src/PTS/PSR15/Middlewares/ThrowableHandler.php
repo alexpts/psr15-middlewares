@@ -18,12 +18,12 @@ class ThrowableHandler implements MiddlewareInterface
         $this->handler = $handler;
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $next) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
     {
-       try {
-           return $next->handle($request);
-       } catch (\Throwable $throwable) {
-           return \call_user_func($this->handler, $throwable, $request);
-       }
+        try {
+            return $next->handle($request);
+        } catch (\Throwable $throwable) {
+            return \call_user_func($this->handler, $throwable, $request);
+        }
     }
 }
