@@ -11,12 +11,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 class RequestWithAttribute implements MiddlewareInterface
 {
     /** @var array */
-	protected $attributes = [];
+    protected $attributes = [];
 
-	public function __construct(array $attributes = [])
-	{
-		$this->attributes = $attributes;
-	}
+    public function __construct(array $attributes = [])
+    {
+        $this->attributes = $attributes;
+    }
 
     /**
      * @param ServerRequestInterface  $request
