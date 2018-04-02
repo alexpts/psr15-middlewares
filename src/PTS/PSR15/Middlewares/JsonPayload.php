@@ -14,7 +14,7 @@ class JsonPayload implements MiddlewareInterface
     /** @var array */
     protected $ignoreHttpMethods = ['GET', 'HEAD'];
     /** @var array */
-    private $allowContentTypes = ['application/json'];
+    protected $allowContentTypes = ['application/json'];
 
     /** @var int */
     protected $decodeDepth = 512;
