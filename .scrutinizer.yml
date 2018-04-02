@@ -14,7 +14,11 @@ checks:
 coding_style:
     php: {  }
 
+
 build:
+    environment:
+            postgresql: false
+            redis: false
     tests:
         override:
             -
