@@ -23,7 +23,7 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 
 ### CORS (deprecated => see StaticHeader)
 
-### PoweredBy
+### PoweredBy (deprecated => see StaticHeader)
 
 ### isXHR
 
@@ -39,6 +39,6 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 
 ### RequestWithAttribute
 
-### StaticResponse (need tests)
+### StaticResponse
 
 ### ThrowableHandler
