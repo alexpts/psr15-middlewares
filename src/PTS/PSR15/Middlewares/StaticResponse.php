@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class StaticResponse implements MiddlewareInterface
+class StaticResponse implements MiddlewareInterface, RequestHandlerInterface
 {
     /** @var ResponseInterface */
     protected $response;
@@ -16,6 +16,11 @@ class StaticResponse implements MiddlewareInterface
     public function __construct(ResponseInterface $response)
     {
         $this->response = $response;
+    }
+
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        return clone $this->response;
     }
 
     /**
@@ -28,6 +33,6 @@ class StaticResponse implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $next) : ResponseInterface
     {
-        return clone $this->response;
+        return $this->handle($request);
     }
 }

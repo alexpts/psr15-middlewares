@@ -40,4 +40,17 @@ class StaticResponseTest extends TestCase
 
         self::assertInstanceOf(JsonResponse::class, $response);
     }
+
+    public function testHandle(): void
+    {
+        $response = new JsonResponse([]);
+        $middleware = new StaticResponse($response);
+
+        /** @var MockObject|ServerRequestInterface $request */
+        $request = $this->getMockBuilder(ServerRequestInterface::class)->getMockForAbstractClass();
+
+        $response = $middleware->handle($request);
+
+        self::assertInstanceOf(JsonResponse::class, $response);
+    }
 }
