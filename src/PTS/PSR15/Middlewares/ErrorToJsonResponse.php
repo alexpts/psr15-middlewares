@@ -72,15 +72,14 @@ class ErrorToJsonResponse implements MiddlewareInterface
      * @param int $targetLevel
      * @param bool $flush
      *
-     * @see Symfony Response::closeOutputBuffers
+     * @see original Symfony Response::closeOutputBuffers
      */
     protected function closeOutputBuffers(int $targetLevel = 0, bool $flush = false): void
     {
         $status = ob_get_status(true);
         $level = \count($status);
-        $flags = PHP_OUTPUT_HANDLER_REMOVABLE | ($flush ? PHP_OUTPUT_HANDLER_FLUSHABLE : PHP_OUTPUT_HANDLER_CLEANABLE);
 
-        while ($level-- > $targetLevel && ($s = $status[$level]) && (!isset($s['del']) ? !isset($s['flags']) || ($s['flags'] & $flags) === $flags : $s['del'])) {
+        while ($level-- > $targetLevel) {
             $flush ? ob_end_flush() : ob_end_clean();
         }
     }
