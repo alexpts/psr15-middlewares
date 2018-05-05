@@ -48,3 +48,5 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 ### CallbackAdapter (need tests)
 
 ### LogError (need tests)
+
+### ErrorToJsonResponse (need tests)
