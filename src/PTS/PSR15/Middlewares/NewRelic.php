@@ -56,7 +56,7 @@ class NewRelic implements MiddlewareInterface
     protected function startTransaction(): void
     {
         if ($this->enabled) {
-            newrelic_start_transaction($this->appName, $this->licenseKey);
+            newrelic_start_transaction($this->appName, $this->licenseKey ?? '');
             newrelic_background_job(!$this->isWeb);
         }
     }
