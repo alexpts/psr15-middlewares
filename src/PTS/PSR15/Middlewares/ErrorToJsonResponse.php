@@ -14,6 +14,14 @@ class ErrorToJsonResponse implements MiddlewareInterface
 {
     protected const HTTP_ERROR_STATUS_CODE = 500;
 
+    /** @var bool */
+    protected $showError = false;
+
+    public function __construct($showError = false)
+    {
+        $this->showError = $showError;
+    }
+
     /**
      * @inheritdoc
      * @throws \Throwable
@@ -35,7 +43,7 @@ class ErrorToJsonResponse implements MiddlewareInterface
      * @return ResponseInterface
      * @throws \InvalidArgumentException
      */
-    public function handleThrowable(Throwable $throwable): ResponseInterface
+    protected function handleThrowable(Throwable $throwable): ResponseInterface
     {
         $this->closeOutputBuffers();
 
@@ -50,7 +58,7 @@ class ErrorToJsonResponse implements MiddlewareInterface
     protected function createResponse(Throwable $throwable): ResponseInterface
     {
         $statusCode = $this->getStatusCode($throwable);
-        $showError = $this->realResponseMessage ?? $statusCode < self::HTTP_ERROR_STATUS_CODE;
+        $showError = $this->showError ?? $statusCode < self::HTTP_ERROR_STATUS_CODE;
         $message = $showError ? $throwable->getMessage() : 'Error';
 
         return new JsonResponse(['message' => $message], $statusCode);
