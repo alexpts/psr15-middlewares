@@ -15,6 +15,8 @@ class WrapOldApp implements MiddlewareInterface
     protected $runnerApp;
     /** @var ExitHandler */
     protected $exitHandler;
+    /** @var int */
+    protected $currentLevelBuffer = 0;
 
     public function __construct(callable $runnerApp, ExitHandler $exitHandler)
     {
@@ -34,7 +36,7 @@ class WrapOldApp implements MiddlewareInterface
         $this->syncGlobalEnv($request);
 
         try {
-            \call_user_func($this->runnerApp);
+            \call_user_func($this->runnerApp, $request);
         } catch (\Throwable $trow) {
             $this->stopBuffer();
             return new HtmlResponse($trow->getMessage(), 500);
@@ -66,8 +68,7 @@ class WrapOldApp implements MiddlewareInterface
         $this->stopBuffer();
         $this->exitHandler->unregister();
 
-        $headers = $this->getHeaders(); // @todo filter header
-        unset($headers[0]);
+        $headers = $this->getHeaders();
 
         return new HtmlResponse($out ?? '', 200, $headers);
     }
@@ -80,16 +81,21 @@ class WrapOldApp implements MiddlewareInterface
     protected function startBuffer(): void
     {
         ob_start();
+        $this->currentLevelBuffer = \count(ob_get_status(true));
     }
 
-    protected function getBuffer(): ?string
+    protected function getBuffer(): string
     {
-        return ob_get_contents();
+        $out = ob_get_contents();
+        return $out === false ? '' : $out;
     }
 
     protected function stopBuffer(): void
     {
-        ob_end_clean();
+        $status = ob_get_status(true);
+        if (\count($status) === $this->currentLevelBuffer) {
+            ob_end_clean();
+        }
     }
 
     protected function isHeaderSent(): bool
@@ -99,6 +105,14 @@ class WrapOldApp implements MiddlewareInterface
 
     protected function getHeaders(): array
     {
-        return headers_list();
+        $headers = headers_list();
+
+        $formatted = [];
+        foreach ($headers as $header) {
+            [$name, $value] = explode(': ', $header, 2);
+            $formatted[$name] = $value;
+        }
+
+        return $formatted;
     }
 }
