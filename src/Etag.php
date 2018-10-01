@@ -69,7 +69,6 @@ class Etag implements MiddlewareInterface
     protected function canEtag(ServerRequestInterface $request, ResponseInterface $response): bool
     {
         return $request->getMethod() === 'GET'
-            && $response->getStatusCode() === 200
-            && $request->hasHeader('If-None-Match');
+            && $response->getStatusCode() === 200;
     }
 }

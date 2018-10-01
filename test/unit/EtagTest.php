@@ -132,7 +132,7 @@ class EtagTest extends TestCase
      *
      * @dataProvider dataProviderCanEtag
      */
-    public function testCanEtag(string $httpMethod, int $status, bool $hasHeader, bool $expected): void
+    public function testCanEtag(string $httpMethod, int $status, bool $expected): void
     {
         $method = new \ReflectionMethod(Etag::class, 'canEtag');
         $method->setAccessible(true);
@@ -141,7 +141,6 @@ class EtagTest extends TestCase
         $request = $this->getMockBuilder(ServerRequestInterface::class)
             ->setMethods(['getMethod', 'hasHeader'])
             ->getMockForAbstractClass();
-        $request->method('hasHeader')->willReturn($hasHeader);
         $request->expects(self::once())->method('getMethod')->willReturn($httpMethod);
 
         /** @var MockObject|ResponseInterface $request */
@@ -157,13 +156,13 @@ class EtagTest extends TestCase
     public function dataProviderCanEtag(): array
     {
         return [
-            ['GET', 200, true, true],
-            ['GET', 201, true, false],
-            ['GET', 200, false, false],
-            ['POST', 200, true, false],
-            ['DELETE', 201, false, false],
-            ['GET', 500, false, false],
-            ['GET', 500, true, false],
+            ['GET', 200, true],
+            ['GET', 201, false],
+            ['GET', 200, true],
+            ['POST', 200, false],
+            ['DELETE', 201, false],
+            ['GET', 500, false],
+            ['GET', 500, false],
         ];
     }
 }
