@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Etag;
+use Zend\Diactoros\Stream;
 
 class EtagTest extends TestCase
 {
@@ -105,9 +106,11 @@ class EtagTest extends TestCase
 
         /** @var MockObject|ResponseInterface $request */
         $response = $this->getMockBuilder(ResponseInterface::class)
-            ->setMethods(['withStatus'])
+            ->setMethods(['withStatus', 'getBody', 'withBody'])
             ->getMockForAbstractClass();
         $response->expects(self::exactly($isCache))->method('withStatus')->with(304)->willReturnSelf();
+        $response->method('withBody')->willReturnSelf();
+        $response->method('getBody')->willReturn(new Stream('php://memory', 'wb+'));
 
         $method->invoke(new Etag, $request, $response, $newEtag);
     }

@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Diactoros\Stream;
 
 class Etag implements MiddlewareInterface
 {
@@ -53,8 +54,6 @@ class Etag implements MiddlewareInterface
      * @param string $etag
      *
      * @return ResponseInterface
-     *
-     * @throws \InvalidArgumentException
      */
     protected function setNotModifyHeader(
         ServerRequestInterface $request,
@@ -63,7 +62,14 @@ class Etag implements MiddlewareInterface
     ): ResponseInterface {
         $clientEtag = $request->getHeaderLine('If-None-Match');
 
-        return  $clientEtag === $etag ? $response->withStatus(304) : $response;
+        if ($clientEtag === $etag) {
+            $response = $response->withStatus(304);
+            $response->getBody()->close();
+            $emptyStream = new Stream('php://memory', 'wb+');
+            $response = $response->withBody($emptyStream);
+        }
+
+        return $response;
     }
 
     protected function canEtag(ServerRequestInterface $request, ResponseInterface $response): bool
