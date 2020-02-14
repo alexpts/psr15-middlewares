@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace PTS\PSR15\Middlewares;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use function count;
 
 /**
  * @docs https://www.w3.org/TR/cors/
@@ -40,21 +42,21 @@ class Cors implements MiddlewareInterface
      *
      * @return ResponseInterface
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
     {
         $response = $next->handle($request);
 
-        if (\count($this->originHosts)) {
+        if (count($this->originHosts)) {
             $response = $response->withHeader(self::ORIGIN, implode(' ', $this->originHosts));
         }
 
-        if (\count($this->allowHeaders)) {
+        if (count($this->allowHeaders)) {
             $response = $response->withHeader(self::HEADERS, implode(', ', $this->allowHeaders));
         }
 
-        if (\count($this->allowMethods)) {
+        if (count($this->allowMethods)) {
             $response = $response->withHeader(self::METHODS, implode(', ', $this->allowMethods));
         }
 

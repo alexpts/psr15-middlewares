@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Diactoros\Stream;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -7,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Etag;
-use Zend\Diactoros\Stream;
 
 class EtagTest extends TestCase
 {
@@ -46,7 +46,7 @@ class EtagTest extends TestCase
      */
     public function testAddEtag(bool $can): void
     {
-        $method = new \ReflectionMethod(Etag::class, 'addEtag');
+        $method = new ReflectionMethod(Etag::class, 'addEtag');
         $method->setAccessible(true);
 
         $stream = $this->getMockBuilder(StreamInterface::class)
@@ -95,7 +95,7 @@ class EtagTest extends TestCase
      */
     public function testSetNotModifyHeader(string $etag, string $newEtag, bool $isCache): void
     {
-        $method = new \ReflectionMethod(Etag::class, 'setNotModifyHeader');
+        $method = new ReflectionMethod(Etag::class, 'setNotModifyHeader');
         $method->setAccessible(true);
 
         /** @var MockObject|ServerRequestInterface $request */
@@ -128,7 +128,6 @@ class EtagTest extends TestCase
     /**
      * @param string $httpMethod
      * @param int $status
-     * @param bool $hasHeader
      * @param bool $expected
      *
      * @throws ReflectionException
@@ -137,7 +136,7 @@ class EtagTest extends TestCase
      */
     public function testCanEtag(string $httpMethod, int $status, bool $expected): void
     {
-        $method = new \ReflectionMethod(Etag::class, 'canEtag');
+        $method = new ReflectionMethod(Etag::class, 'canEtag');
         $method->setAccessible(true);
 
         /** @var MockObject|ServerRequestInterface $request */

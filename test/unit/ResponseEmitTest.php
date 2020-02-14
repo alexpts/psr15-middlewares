@@ -1,5 +1,7 @@
 <?php
 
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -7,8 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\ResponseEmit;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
-use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 class ResponseEmitTest extends TestCase
 {
@@ -40,7 +40,7 @@ class ResponseEmitTest extends TestCase
         $emitter = new SapiEmitter;
         $middleware = new ResponseEmit($emitter);
 
-        $method = new \ReflectionMethod(ResponseEmit::class, 'getResponseEmitter');
+        $method = new ReflectionMethod(ResponseEmit::class, 'getResponseEmitter');
         $method->setAccessible(true);
         $actual = $method->invoke($middleware);
 

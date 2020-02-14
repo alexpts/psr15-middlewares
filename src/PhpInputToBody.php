@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace PTS\PSR15\Middlewares;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
 
 class PhpInputToBody implements MiddlewareInterface
 {
@@ -16,8 +18,8 @@ class PhpInputToBody implements MiddlewareInterface
      *
      * @return ResponseInterface
      *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     public function process(ServerRequestInterface $request,  RequestHandlerInterface $handler) : ResponseInterface
     {
@@ -34,7 +36,7 @@ class PhpInputToBody implements MiddlewareInterface
      *
      * @return array
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function parseBody(ServerRequestInterface $request): array
     {

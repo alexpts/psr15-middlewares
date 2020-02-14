@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace PTS\PSR15\Middlewares;
 
+use InvalidArgumentException;
+use Laminas\Diactoros\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Diactoros\Stream;
+use RuntimeException;
 
 class Etag implements MiddlewareInterface
 {
@@ -17,8 +19,8 @@ class Etag implements MiddlewareInterface
      *
      * @return ResponseInterface
      *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
@@ -33,8 +35,8 @@ class Etag implements MiddlewareInterface
      *
      * @return ResponseInterface
      *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     public function addEtag(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {

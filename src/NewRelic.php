@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use function extension_loaded;
 
 class NewRelic implements MiddlewareInterface
 {
@@ -35,7 +36,7 @@ class NewRelic implements MiddlewareInterface
 
     protected function isEnableExtension(): bool
     {
-        return \extension_loaded('newrelic');
+        return extension_loaded('newrelic');
     }
 
     /**

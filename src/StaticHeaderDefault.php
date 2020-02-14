@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PTS\PSR15\Middlewares;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 
 class StaticHeaderDefault extends StaticHeader
@@ -13,7 +14,7 @@ class StaticHeaderDefault extends StaticHeader
      *
      * @return ResponseInterface
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function withStaticHeaders(ResponseInterface $response, array $headers): ResponseInterface
     {

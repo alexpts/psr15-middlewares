@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace PTS\PSR15\Middlewares;
 
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\HttpHandlerRunner\Emitter\EmitterInterface;
+
 
 class ResponseEmit implements MiddlewareInterface
 {

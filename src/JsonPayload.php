@@ -4,10 +4,14 @@ declare(strict_types=1);
 namespace PTS\PSR15\Middlewares;
 
 use DomainException;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use RuntimeException;
+use function in_array;
+use function json_decode;
 
 class JsonPayload implements MiddlewareInterface
 {
@@ -26,15 +30,14 @@ class JsonPayload implements MiddlewareInterface
      * @param RequestHandlerInterface $next
      *
      * @return ResponseInterface
-     *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     * @throws \DomainException
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
+     * @throws DomainException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
     {
         $method = $request->getMethod();
-        if (!\in_array($method, $this->ignoreHttpMethods, true) && $this->isSupportContentType($request)) {
+        if (!in_array($method, $this->ignoreHttpMethods, true) && $this->isSupportContentType($request)) {
             $parsedJson = $this->parse($request);
             $request = $request->withParsedBody($parsedJson);
         }
@@ -46,9 +49,8 @@ class JsonPayload implements MiddlewareInterface
      * @param ServerRequestInterface $request
      *
      * @return array
-     *
-     * @throws \DomainException
-     * @throws \RuntimeException
+     * @throws DomainException
+     * @throws RuntimeException
      */
     protected function parse(ServerRequestInterface $request): array
     {
@@ -57,7 +59,7 @@ class JsonPayload implements MiddlewareInterface
             return [];
         }
 
-        $parsedJson = \json_decode($body, true, $this->decodeDepth, $this->decodeOptions);
+        $parsedJson = json_decode($body, true, $this->decodeDepth, $this->decodeOptions);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new DomainException(json_last_error_msg(), json_last_error());

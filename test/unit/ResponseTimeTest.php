@@ -1,5 +1,7 @@
 <?php
 
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -7,8 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\ResponseTime;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\ServerRequest;
 
 class ResponseTimeTest extends TestCase
 {
@@ -38,10 +38,10 @@ class ResponseTimeTest extends TestCase
     public function testGetDiff(): void
     {
         $middleware = new ResponseTime;
-        $method = new \ReflectionMethod(ResponseTime::class, 'getDiff');
+        $method = new ReflectionMethod(ResponseTime::class, 'getDiff');
         $method->setAccessible(true);
         $actual = $method->invoke($middleware, microtime(true));
-        self::assertInternalType('float', $actual);
+        self::assertIsFloat($actual);
         self::assertLessThan(0.2, $actual);
     }
 

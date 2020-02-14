@@ -1,12 +1,12 @@
 <?php
 
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\HtmlResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\ThrowableHandler;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Response\HtmlResponse;
 
 class ThrowableHandlerTest extends TestCase
 {
@@ -16,12 +16,12 @@ class ThrowableHandlerTest extends TestCase
      */
     public function testCreate(): void
     {
-        $handler = function (\Throwable $trow, ServerRequestInterface $request) {
+        $handler = static function (Throwable $trow, ServerRequestInterface $request) {
             return new Response($trow->getMessage(), 500);
         };
         $middleware = new ThrowableHandler($handler);
 
-        $property = new \ReflectionProperty(ThrowableHandler::class, 'handler');
+        $property = new ReflectionProperty(ThrowableHandler::class, 'handler');
         $property->setAccessible(true);
         $actual = $property->getValue($middleware);
 
@@ -42,7 +42,7 @@ class ThrowableHandlerTest extends TestCase
             ->getMockForAbstractClass();
         $next->expects(self::once())->method('handle')->with($request)->willThrowException(new Exception('Some error'));
 
-        $handler = function (\Throwable $trow, ServerRequestInterface $request) {
+        $handler = static function (Throwable $trow, ServerRequestInterface $request) {
             return new HtmlResponse($trow->getMessage(), 500);
         };
         $middleware = new ThrowableHandler($handler);

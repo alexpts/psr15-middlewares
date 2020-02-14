@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Diactoros\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -7,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Cors;
-use Zend\Diactoros\Response;
+
 
 class CorsTest extends TestCase
 {
@@ -152,7 +153,7 @@ class CorsTest extends TestCase
         $return = $middleware->setAllowHeaders($headers);
         self::assertInstanceOf(Cors::class, $return);
 
-        $property = new \ReflectionProperty(Cors::class, 'allowHeaders');
+        $property = new ReflectionProperty(Cors::class, 'allowHeaders');
         $property->setAccessible(true);
         $actual = $property->getValue($middleware);
         self::assertSame($headers, $actual);
@@ -172,7 +173,7 @@ class CorsTest extends TestCase
             self::assertInstanceOf(Cors::class, $return);
         }
 
-        $property = new \ReflectionProperty(Cors::class, 'allowHeaders');
+        $property = new ReflectionProperty(Cors::class, 'allowHeaders');
         $property->setAccessible(true);
         $actual = $property->getValue($middleware);
         self::assertSame($headers, $actual);
@@ -189,7 +190,7 @@ class CorsTest extends TestCase
         $return = $middleware->setAllowMethods($headers);
         self::assertInstanceOf(Cors::class, $return);
 
-        $property = new \ReflectionProperty(Cors::class, 'allowMethods');
+        $property = new ReflectionProperty(Cors::class, 'allowMethods');
         $property->setAccessible(true);
         $actual = $property->getValue($middleware);
         self::assertSame($headers, $actual);

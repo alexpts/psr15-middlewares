@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Diactoros\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -8,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Etag;
 use PTS\PSR15\Middlewares\StaticHeader;
 use PTS\PSR15\Middlewares\StaticHeaderDefault;
-use Zend\Diactoros\Response;
+
 
 class StaticHeaderDefaultTest extends TestCase
 {
@@ -21,7 +22,7 @@ class StaticHeaderDefaultTest extends TestCase
         $headers = ['Content-Type' => 'json', 'X-Powered-By' => 'PHP'];
         $middleware = new StaticHeaderDefault($headers);
 
-        $property = new \ReflectionProperty(StaticHeader::class, 'headers');
+        $property = new ReflectionProperty(StaticHeader::class, 'headers');
         $property->setAccessible(true);
         $actual = $property->getValue($middleware);
 
@@ -68,7 +69,7 @@ class StaticHeaderDefaultTest extends TestCase
      */
     public function testWithStaticHeaders(array $headers, array $extraHeaders, array $expected): void
     {
-        $method = new \ReflectionMethod(StaticHeaderDefault::class, 'withStaticHeaders');
+        $method = new ReflectionMethod(StaticHeaderDefault::class, 'withStaticHeaders');
         $method->setAccessible(true);
 
         $md = new StaticHeaderDefault;

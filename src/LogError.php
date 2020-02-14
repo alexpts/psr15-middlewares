@@ -9,6 +9,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function call_user_func;
 
 class LogError implements MiddlewareInterface
 {
@@ -50,7 +51,7 @@ class LogError implements MiddlewareInterface
         ['message' => $message, 'context' => $context] = $this->createLogMessage($throwable, $request);
         $level = $context['error_level'] ?? $this->defaultLevel;
 
-        \call_user_func([$this->logger, 'log'], $level, $message, $context);
+        call_user_func([$this->logger, 'log'], $level, $message, $context);
     }
 
     protected function createLogMessage(Throwable $throwable, ServerRequestInterface $request): array

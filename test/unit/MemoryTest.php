@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Diactoros\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -7,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Memory;
-use Zend\Diactoros\Response;
 
 class MemoryTest extends TestCase
 {
@@ -37,10 +37,10 @@ class MemoryTest extends TestCase
     public function testGetPeakMemory(): void
     {
         $middleware = new Memory;
-        $method = new \ReflectionMethod(Memory::class, 'getPeakMemory');
+        $method = new ReflectionMethod(Memory::class, 'getPeakMemory');
         $method->setAccessible(true);
         $actual = $method->invoke($middleware);
-        self::assertInternalType('float', $actual);
+        self::assertIsFloat($actual);
     }
 
     /**
@@ -48,7 +48,7 @@ class MemoryTest extends TestCase
      */
     public function testProcess(): void
     {
-        $expectedMemory = 123;
+        $expectedMemory = 123.12;
 
         /** @var MockObject|ResponseInterface $middleware */
         $response = $this->getMockBuilder(Response::class)

@@ -1,11 +1,12 @@
 <?php
 
+use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\StaticResponse;
-use Zend\Diactoros\Response\JsonResponse;
+
 
 class StaticResponseTest extends TestCase
 {
@@ -18,7 +19,7 @@ class StaticResponseTest extends TestCase
         $response = new JsonResponse([]);
         $middleware = new StaticResponse($response);
 
-        $property = new \ReflectionProperty(StaticResponse::class, 'response');
+        $property = new ReflectionProperty(StaticResponse::class, 'response');
         $property->setAccessible(true);
         $actual = $property->getValue($middleware);
 

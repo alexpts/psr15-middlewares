@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 
 class ThrowableHandler implements MiddlewareInterface
 {
@@ -22,7 +23,7 @@ class ThrowableHandler implements MiddlewareInterface
     {
         try {
             return $next->handle($request);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             return \call_user_func($this->handler, $throwable, $request);
         }
     }

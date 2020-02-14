@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Diactoros\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -8,7 +9,6 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Memory;
 use PTS\PSR15\Middlewares\PoweredBy;
-use Zend\Diactoros\Response;
 
 class PoweredByTest extends TestCase
 {

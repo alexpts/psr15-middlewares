@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PTS\PSR15\Middlewares;
 
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -29,7 +30,7 @@ class StaticResponse implements MiddlewareInterface, RequestHandlerInterface
      *
      * @return ResponseInterface
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $next) : ResponseInterface
     {

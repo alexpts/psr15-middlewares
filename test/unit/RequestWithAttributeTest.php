@@ -1,5 +1,6 @@
 <?php
 
+use Laminas\Diactoros\ServerRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -7,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Etag;
 use PTS\PSR15\Middlewares\RequestWithAttribute;
-use Zend\Diactoros\ServerRequest;
 
 class RequestWithAttributeTest extends TestCase
 {
@@ -20,7 +20,7 @@ class RequestWithAttributeTest extends TestCase
         $attributes = ['Content-Type' => 'json', 'X-Powered-By' => 'PHP'];
         $middleware = new RequestWithAttribute($attributes);
 
-        $property = new \ReflectionProperty(RequestWithAttribute::class, 'attributes');
+        $property = new ReflectionProperty(RequestWithAttribute::class, 'attributes');
         $property->setAccessible(true);
         $actual = $property->getValue($middleware);
 
@@ -66,7 +66,7 @@ class RequestWithAttributeTest extends TestCase
      */
     public function testWithAttributes(array $attributes, array $expected): void
     {
-        $method = new \ReflectionMethod(RequestWithAttribute::class, 'withAttributes');
+        $method = new ReflectionMethod(RequestWithAttribute::class, 'withAttributes');
         $method->setAccessible(true);
 
         $request = new ServerRequest;

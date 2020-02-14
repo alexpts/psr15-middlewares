@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace PTS\PSR15\Middlewares;
 
+use InvalidArgumentException;
+use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
-use Zend\Diactoros\Response\JsonResponse;
+use function count;
 
 class ErrorToJsonResponse implements MiddlewareInterface
 {
@@ -24,13 +26,13 @@ class ErrorToJsonResponse implements MiddlewareInterface
 
     /**
      * @inheritdoc
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
         try {
             $response = $handler->handle($request);
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
             $response = $this->handleThrowable($throwable);
         }
 
@@ -41,7 +43,7 @@ class ErrorToJsonResponse implements MiddlewareInterface
      * @param Throwable $throwable
      *
      * @return ResponseInterface
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function handleThrowable(Throwable $throwable): ResponseInterface
     {
@@ -53,7 +55,7 @@ class ErrorToJsonResponse implements MiddlewareInterface
     /**
      * @param Throwable $throwable
      * @return ResponseInterface
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function createResponse(Throwable $throwable): ResponseInterface
     {
@@ -85,7 +87,7 @@ class ErrorToJsonResponse implements MiddlewareInterface
     protected function closeOutputBuffers(int $targetLevel = 0, bool $flush = false): void
     {
         $status = ob_get_status(true);
-        $level = \count($status);
+        $level = count($status);
 
         while ($level-- > $targetLevel) {
             $flush ? ob_end_flush() : ob_end_clean();
