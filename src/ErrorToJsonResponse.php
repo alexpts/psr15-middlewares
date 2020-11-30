@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace PTS\PSR15\Middlewares;
 
-use InvalidArgumentException;
-use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use PTS\Psr7\Response\JsonResponse;
 use Throwable;
 use function count;
 
@@ -16,54 +15,47 @@ class ErrorToJsonResponse implements MiddlewareInterface
 {
     protected const HTTP_ERROR_STATUS_CODE = 500;
 
-    /** @var bool */
-    protected $showError = false;
-
-    public function __construct($showError = false)
-    {
-        $this->showError = $showError;
+    public function __construct(
+        protected int $statusCodeDefault = 500,
+        protected bool $showError = false,
+    ) {
     }
 
     /**
      * @inheritdoc
      * @throws Throwable
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $targetLevel = count(ob_get_status(true));
+
         try {
             $response = $handler->handle($request);
         } catch (Throwable $throwable) {
-            $response = $this->handleThrowable($throwable);
+            $response = $this->handleThrowable($throwable, $targetLevel);
         }
 
         return $response;
     }
 
-    /**
-     * @param Throwable $throwable
-     *
-     * @return ResponseInterface
-     * @throws InvalidArgumentException
-     */
-    protected function handleThrowable(Throwable $throwable): ResponseInterface
+    protected function handleThrowable(Throwable $throwable, int $targetLevel): ResponseInterface
     {
-        $this->closeOutputBuffers();
-
+        $this->closeOutputBuffers($targetLevel);
         return $this->createResponse($throwable);
     }
 
-    /**
-     * @param Throwable $throwable
-     * @return ResponseInterface
-     * @throws InvalidArgumentException
-     */
     protected function createResponse(Throwable $throwable): ResponseInterface
     {
         $statusCode = $this->getStatusCode($throwable);
         $showError = $this->showError ?? $statusCode < self::HTTP_ERROR_STATUS_CODE;
         $message = $showError ? $throwable->getMessage() : 'Error';
 
-        return new JsonResponse(['message' => $message], $statusCode);
+        return new JsonResponse([
+            'status' => 'error',
+            'code' => $throwable->getCode(),
+            'httpStatusCode' => $statusCode,
+            'message' => $message
+        ], $statusCode);
     }
 
     protected function getStatusCode(Throwable $throwable): int

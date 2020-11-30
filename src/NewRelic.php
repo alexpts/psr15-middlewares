@@ -12,14 +12,10 @@ use function extension_loaded;
 class NewRelic implements MiddlewareInterface
 {
 
-    /** @var bool */
-    protected $enabled;
-    /** @var null|string */
-    protected $appName;
-    /** @var null|string */
-    protected $licenseKey;
-    /** @var bool */
-    protected $isWeb = true;
+    protected bool $enabled;
+    protected ?string $appName = null;
+    protected ?string $licenseKey = null;
+    protected bool $isWeb = true;
 
     /**
      * @param string|null $appName

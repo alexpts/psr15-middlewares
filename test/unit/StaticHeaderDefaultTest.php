@@ -1,6 +1,6 @@
 <?php
+declare(strict_types=1);
 
-use Laminas\Diactoros\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -9,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Etag;
 use PTS\PSR15\Middlewares\StaticHeader;
 use PTS\PSR15\Middlewares\StaticHeaderDefault;
-
+use PTS\Psr7\Response;
 
 class StaticHeaderDefaultTest extends TestCase
 {
@@ -89,27 +89,27 @@ class StaticHeaderDefaultTest extends TestCase
             [
                 [],
                 ['Content-Type' => 'json'],
-                ['Content-Type' => ['json']]
+                ['content-type' => ['json']]
             ],
             [
                 ['Content-Type' => 'json'],
                 ['X-Memory' => '1024'],
-                ['Content-Type' => ['json'], 'X-Memory' => ['1024']]
+                ['content-type' => ['json'], 'x-memory' => ['1024']]
             ],
             [
                 ['Content-Type' => ['json', 'vue']],
                 ['Content-Type' => ['json', 'vue']],
-                ['Content-Type' => ['json', 'vue']],
+                ['content-type' => ['json', 'vue']],
             ],
             [
                 ['Content-Type' => 'json'],
                 ['Content-Type' => 'json2'],
-                ['Content-Type' => ['json']],
+                ['content-type' => ['json']],
             ],
             [
                 ['Content-Type' => ['json']],
                 ['Content-Type' => 'json2'],
-                ['Content-Type' => ['json']],
+                ['content-type' => ['json']],
             ],
         ];
     }

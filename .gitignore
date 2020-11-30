@@ -1,2 +1,4 @@
-/vendor/
+vendor/
 test/clover.xml
+test/.phpunit.result.cache
+.idea

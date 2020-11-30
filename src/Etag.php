@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace PTS\PSR15\Middlewares;
 
 use InvalidArgumentException;
-use Laminas\Diactoros\Stream;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use PTS\Psr7\Stream;
 use RuntimeException;
 
 class Etag implements MiddlewareInterface

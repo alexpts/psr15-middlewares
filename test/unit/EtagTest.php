@@ -1,6 +1,6 @@
 <?php
+declare(strict_types=1);
 
-use Laminas\Diactoros\Stream;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Etag;
+use PTS\Psr7\Stream;
 
 class EtagTest extends TestCase
 {
@@ -38,13 +39,13 @@ class EtagTest extends TestCase
     }
 
     /**
-     * @param bool $can
+     * @param int $can
      *
      * @throws ReflectionException
      *
      * @dataProvider dataProviderAddEtag
      */
-    public function testAddEtag(bool $can): void
+    public function testAddEtag(int $can): void
     {
         $method = new ReflectionMethod(Etag::class, 'addEtag');
         $method->setAccessible(true);
@@ -52,7 +53,7 @@ class EtagTest extends TestCase
         $stream = $this->getMockBuilder(StreamInterface::class)
             ->setMethods(['getContents'])
             ->getMockForAbstractClass();
-        $stream->expects(self::exactly($can))->method('getContents')->willReturn(md5(time()));
+        $stream->expects(self::exactly($can))->method('getContents')->willReturn(md5((string)time()));
 
         /** @var MockObject|ServerRequestInterface $request */
         $request = $this->getMockBuilder(ServerRequestInterface::class)
@@ -69,7 +70,7 @@ class EtagTest extends TestCase
         $mock = $this->getMockBuilder(Etag::class)
             ->setMethods(['canEtag', 'setNotModifyHeader'])
             ->getMock();
-        $mock->expects(self::once())->method('canEtag')->with($request, $response)->willReturn($can);
+        $mock->expects(self::once())->method('canEtag')->with($request, $response)->willReturn((bool)$can);
         $mock->expects(self::exactly($can))->method('setNotModifyHeader')->with($request, $response);
 
         $method->invoke($mock, $request, $response);
@@ -78,8 +79,8 @@ class EtagTest extends TestCase
     public function dataProviderAddEtag(): array
     {
         return [
-            [true, 'asdasd'],
-            [false]
+            [1, 'asdasd'],
+            [0]
         ];
     }
 
@@ -87,13 +88,13 @@ class EtagTest extends TestCase
     /**
      * @param string $etag
      * @param string $newEtag
-     * @param bool $isCache
+     * @param int $isCache
      *
      * @throws ReflectionException
      *
      * @dataProvider dataProviderSetNotModifyHeader
      */
-    public function testSetNotModifyHeader(string $etag, string $newEtag, bool $isCache): void
+    public function testSetNotModifyHeader(string $etag, string $newEtag, int $isCache): void
     {
         $method = new ReflectionMethod(Etag::class, 'setNotModifyHeader');
         $method->setAccessible(true);
@@ -110,7 +111,7 @@ class EtagTest extends TestCase
             ->getMockForAbstractClass();
         $response->expects(self::exactly($isCache))->method('withStatus')->with(304)->willReturnSelf();
         $response->method('withBody')->willReturnSelf();
-        $response->method('getBody')->willReturn(new Stream('php://memory', 'wb+'));
+        $response->method('getBody')->willReturn(new Stream);
 
         $method->invoke(new Etag, $request, $response, $newEtag);
     }
@@ -118,10 +119,10 @@ class EtagTest extends TestCase
     public function dataProviderSetNotModifyHeader(): array
     {
         return [
-            ['sd', 'sd', true],
-            ['sd', 'sd2', false],
-            ['W/213', '213', false],
-            ['W/213', 'W/212', false],
+            ['sd', 'sd', 1],
+            ['sd', 'sd2', 0],
+            ['W/213', '213', 0],
+            ['W/213', 'W/212', 0],
         ];
     }
 

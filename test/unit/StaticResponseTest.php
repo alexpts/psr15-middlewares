@@ -1,12 +1,12 @@
 <?php
+declare(strict_types=1);
 
-use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\StaticResponse;
-
+use PTS\Psr7\Response\JsonResponse;
 
 class StaticResponseTest extends TestCase
 {

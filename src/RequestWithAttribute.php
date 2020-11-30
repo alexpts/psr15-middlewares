@@ -11,8 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class RequestWithAttribute implements MiddlewareInterface
 {
-    /** @var array */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     public function __construct(array $attributes = [])
     {
@@ -30,7 +29,6 @@ class RequestWithAttribute implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $request = $this->withAttributes($request, $this->attributes);
-
         return $handler->handle($request);
     }
 

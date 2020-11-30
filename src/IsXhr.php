@@ -13,7 +13,8 @@ class IsXhr implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
         $isXHR = $this->hasXHR($request);
-        return $handler->handle($request->withAttribute('xhr', $isXHR));
+        $request = $request->withAttribute('xhr', $isXHR);
+        return $handler->handle($request);
     }
 
     protected function hasXHR(ServerRequestInterface $request): bool

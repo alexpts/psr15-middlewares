@@ -1,23 +1,20 @@
 <?php
+declare(strict_types=1);
 
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\Response\HtmlResponse;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\ThrowableHandler;
+use PTS\Psr7\Response;
 
 class ThrowableHandlerTest extends TestCase
 {
 
-    /**
-     * @throws ReflectionException
-     */
     public function testCreate(): void
     {
-        $handler = static function (Throwable $trow, ServerRequestInterface $request) {
-            return new Response($trow->getMessage(), 500);
+        $handler = static function (Throwable $trow) {
+            return new Response(500, [], $trow->getMessage());
         };
         $middleware = new ThrowableHandler($handler);
 
@@ -38,17 +35,17 @@ class ThrowableHandlerTest extends TestCase
 
         /** @var MockObject|RequestHandlerInterface $next */
         $next = $this->getMockBuilder(RequestHandlerInterface::class)
-            ->setMethods(['handle'])
+            ->onlyMethods(['handle'])
             ->getMockForAbstractClass();
         $next->expects(self::once())->method('handle')->with($request)->willThrowException(new Exception('Some error'));
 
-        $handler = static function (Throwable $trow, ServerRequestInterface $request) {
-            return new HtmlResponse($trow->getMessage(), 500);
+        $handler = static function (Throwable $trow) {
+            return new Response(500, [], $trow->getMessage());
         };
         $middleware = new ThrowableHandler($handler);
         $response = $middleware->process($request, $next);
 
         self::assertSame(500, $response->getStatusCode());
-        self::assertSame('Some error', $response->getBody()->getContents());
+        self::assertSame('Some error', (string)$response->getBody());
     }
 }

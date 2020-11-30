@@ -11,25 +11,16 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class StaticHeader implements MiddlewareInterface
 {
-	protected $headers = [];
+    protected array $headers = [];
 
-	public function __construct(array $headers = [])
-	{
-		$this->headers = $headers;
-	}
+    public function __construct(array $headers = [])
+    {
+        $this->headers = $headers;
+    }
 
-    /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     *
-     * @return ResponseInterface
-     *
-     * @throws InvalidArgumentException
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
-
         return $this->withStaticHeaders($response, $this->headers);
     }
 
@@ -38,7 +29,6 @@ class StaticHeader implements MiddlewareInterface
      * @param array $headers - header is array of values or string value
      *
      * @return ResponseInterface
-     *
      * @throws InvalidArgumentException
      */
     protected function withStaticHeaders(ResponseInterface $response, array $headers): ResponseInterface

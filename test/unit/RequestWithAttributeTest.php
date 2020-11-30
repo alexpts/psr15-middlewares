@@ -1,6 +1,6 @@
 <?php
+declare(strict_types=1);
 
-use Laminas\Diactoros\ServerRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -8,6 +8,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Etag;
 use PTS\PSR15\Middlewares\RequestWithAttribute;
+use PTS\Psr7\ServerRequest;
+use PTS\Psr7\Uri;
 
 class RequestWithAttributeTest extends TestCase
 {
@@ -69,7 +71,7 @@ class RequestWithAttributeTest extends TestCase
         $method = new ReflectionMethod(RequestWithAttribute::class, 'withAttributes');
         $method->setAccessible(true);
 
-        $request = new ServerRequest;
+        $request = new ServerRequest('GET', new Uri('/'));
         $actual = $method->invoke(new RequestWithAttribute, $request, $attributes);
 
         self::assertSame($expected, $actual->getAttributes());

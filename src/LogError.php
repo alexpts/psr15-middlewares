@@ -8,66 +8,74 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use PTS\Tools\TraceFormatter;
 use Throwable;
 use function call_user_func;
 
+/**
+ * Логирование необработанных всплывающих ошибок
+ */
 class LogError implements MiddlewareInterface
 {
-    /** @var LoggerInterface */
-    protected $logger;
-    /** @var int|string */
-    protected $defaultLevel;
+    protected LoggerInterface $logger;
+    protected string $defaultLevel = LogLevel::ERROR;
+    protected TraceFormatter $traceFormatter;
 
-    /**
-     * LogException constructor.
-     *
-     * @param LoggerInterface $logger
-     * @param int|string $defaultLevel
-     */
-    public function __construct(LoggerInterface $logger, $defaultLevel = 400)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        TraceFormatter $traceFormatter,
+        $defaultLevel = LogLevel::ERROR
+    ) {
         $this->logger = $logger;
         $this->defaultLevel = $defaultLevel;
+        $this->traceFormatter = $traceFormatter;
     }
 
-    /**
-     * @inheritdoc
-     * @throws \Throwable
-     */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
             $response = $handler->handle($request);
-        } catch (\Throwable $throwable) {
-            $this->log($throwable, $request);
+        } catch (Throwable $throwable) {
+            $this->log($throwable);
             throw $throwable;
         }
 
         return $response;
     }
 
-    protected function log(Throwable $throwable, ServerRequestInterface $request): void
+    /**
+     * @param Throwable $throwable
+     */
+    protected function log(Throwable $throwable): void
     {
-        ['message' => $message, 'context' => $context] = $this->createLogMessage($throwable, $request);
-        $level = $context['error_level'] ?? $this->defaultLevel;
+        $log = $this->createLogMessage($throwable);
+        $message = $log['message'];
+        unset($log['message']);
 
-        call_user_func([$this->logger, 'log'], $level, $message, $context);
+        $level = $context['error_level'] ?? $this->defaultLevel;
+        call_user_func([$this->logger, 'log'], $level, $message, [
+            'exception' => $log
+        ]);
     }
 
-    protected function createLogMessage(Throwable $throwable, ServerRequestInterface $request): array
+    /**
+     * Преобразует рекурсивно всю цепочку исключений в запись лога
+     *
+     * @param Throwable $throwable
+     *
+     * @return array
+     */
+    protected function createLogMessage(Throwable $throwable): array
     {
         $log = [
             'message' => $throwable->getMessage(),
-            'context' => [
-                'code' => $throwable->getCode(),
-                'trace' => $throwable->getTrace(),
-                'requestId' => $request->getAttribute('requestId')
-            ]
+            'code' => $throwable->getCode(),
+            'trace' => $this->traceFormatter->formatTrace($throwable->getTrace()),
         ];
 
         if ($throwable->getPrevious()) {
-            $log['context']['prev'] = $this->createLogMessage($throwable->getPrevious(), $request);
-            unset($log['context']['prev']['context']['requestId']);
+            $log['prev'] = $this->createLogMessage($throwable->getPrevious());
         }
 
         return $log;

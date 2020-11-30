@@ -1,7 +1,6 @@
 <?php
+declare(strict_types=1);
 
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\ServerRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -9,6 +8,8 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\ResponseTime;
+use PTS\Psr7\Response;
+use PTS\Psr7\ServerRequest;
 
 class ResponseTimeTest extends TestCase
 {

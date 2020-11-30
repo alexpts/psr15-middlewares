@@ -19,11 +19,9 @@ Middlewares compatible with [PSR-7](https://www.php-fig.org/psr/psr-7/) and [PSR
 
 ### ResponseMemory
 
-### ResponseEmit
+### CORS ( => see StaticHeader)
 
-### CORS (deprecated => see StaticHeader)
-
-### PoweredBy (deprecated => see StaticHeader)
+### PoweredBy ( => see StaticHeader)
 
 ### isXHR
 

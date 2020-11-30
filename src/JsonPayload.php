@@ -15,15 +15,11 @@ use function json_decode;
 
 class JsonPayload implements MiddlewareInterface
 {
-    /** @var array */
-    protected $ignoreHttpMethods = ['GET', 'HEAD'];
-    /** @var array */
-    protected $allowContentTypes = ['application/json'];
+    protected array $ignoreHttpMethods = ['GET', 'HEAD'];
+    protected array $allowContentTypes = ['application/json'];
 
-    /** @var int */
-    protected $decodeDepth = 512;
-    /** @var int */
-    protected $decodeOptions = JSON_ERROR_NONE;
+    protected int $decodeDepth = 512;
+    protected int $decodeOptions = JSON_THROW_ON_ERROR;
 
     /**
      * @param ServerRequestInterface $request
@@ -59,13 +55,7 @@ class JsonPayload implements MiddlewareInterface
             return [];
         }
 
-        $parsedJson = json_decode($body, true, $this->decodeDepth, $this->decodeOptions);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new DomainException(json_last_error_msg(), json_last_error());
-        }
-
-        return $parsedJson;
+        return json_decode($body, true, $this->decodeDepth, $this->decodeOptions);
     }
 
     /**
@@ -78,7 +68,7 @@ class JsonPayload implements MiddlewareInterface
         $contentType = $request->getHeaderLine('content-type');
 
         foreach ($this->allowContentTypes as $allowContentType) {
-            if (stripos($contentType, $allowContentType) === 0) {
+            if (str_contains($contentType, $allowContentType)) {
                 return true;
             }
         }

@@ -1,6 +1,6 @@
 <?php
+declare(strict_types=1);
 
-use Laminas\Diactoros\Response;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use PTS\PSR15\Middlewares\Etag;
 use PTS\PSR15\Middlewares\StaticHeader;
-
+use PTS\Psr7\Response;
 
 class StaticHeaderTest extends TestCase
 {
@@ -67,7 +67,7 @@ class StaticHeaderTest extends TestCase
      */
     public function testWithStaticHeaders(array $headers, array $expected): void
     {
-        $method = new \ReflectionMethod(StaticHeader::class, 'withStaticHeaders');
+        $method = new ReflectionMethod(StaticHeader::class, 'withStaticHeaders');
         $method->setAccessible(true);
 
         $response = new Response;
@@ -83,15 +83,15 @@ class StaticHeaderTest extends TestCase
             [[], []],
             'string value' => [
                 ['Content-Type' => 'json'],
-                ['Content-Type' => ['json']]
+                ['content-type' => ['json']]
             ],
             'array value' => [
                 ['Content-Type' => ['json']],
-                ['Content-Type' => ['json']]
+                ['content-type' => ['json']]
             ],
             'array values' => [
                 ['Content-Type' => ['json', 'vue']],
-                ['Content-Type' => ['json', 'vue']]
+                ['content-type' => ['json', 'vue']]
             ],
         ];
     }
