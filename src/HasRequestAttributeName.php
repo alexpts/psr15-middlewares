@@ -4,20 +4,22 @@ declare(strict_types=1);
 namespace PTS\PSR15\Middlewares;
 
 use Exception;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use PTS\Tools\DuplicateKeyException;
 
 class HasRequestAttributeName implements MiddlewareInterface
 {
     protected array $attributes = [];
     protected Exception $exception;
 
-    public function __construct(array $attributes, Exception $exception)
+    public function __construct(array $attributes, Exception $exception = null)
     {
         $this->attributes = $attributes;
-        $this->exception = $exception;
+        $this->exception = $exception ?? new InvalidArgumentException('Check attribute error');
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
