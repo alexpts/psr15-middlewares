@@ -1,9 +1,7 @@
 # psr15-middlewares
 
-[![Build Status](https://travis-ci.org/alexpts/psr15-middlewares.svg?branch=master)](https://travis-ci.org/alexpts/psr15-middlewares)
-[![Code Coverage](https://scrutinizer-ci.com/g/alexpts/psr15-middlewares/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/alexpts/psr15-middlewares/?branch=master)
-[![Code Climate](https://codeclimate.com/github/alexpts/psr15-middlewares/badges/gpa.svg)](https://codeclimate.com/github/alexpts/psr15-middlewares)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alexpts/psr15-middlewares/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/alexpts/psr15-middlewares/?branch=master)
+[![phpunit](https://github.com/alexpts/psr15-middlewares/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/alexpts/psr15-middlewares/actions/workflows/phpunit.yml)
+[![codecov](https://codecov.io/gh/alexpts/psr15-middlewares/branch/master/graph/badge.svg?token=14L6IJA5UE)](https://codecov.io/gh/alexpts/psr15-middlewares)
 
 
 Collection of PSR-15 middlewares.
